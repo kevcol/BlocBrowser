@@ -72,26 +72,29 @@
     CGFloat width = CGRectGetWidth(self.view.bounds);
     
     CGFloat browserHeight = CGRectGetHeight(self.view.bounds) - itemHeight;
+    CGFloat leftPadding = (width - 280) / 2;
+    CGFloat topPadding = (browserHeight - 60) / 3;
     
     
     // Now assign the frames
     self.textField.frame = CGRectMake(0, 0, width, itemHeight);
     self.webview.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
     
-    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
+    self.awesomeToolbar.frame = CGRectMake(leftPadding, topPadding, 280, 60); // Is there a better way to get 280 and 60?
+        
     
 }
 
 #pragma mark - BLCAwesomeFloatingToolbarDelegate
 
 - (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didSelectButtonWithTitle:(NSString *)title {
-    if ([title isEqual:NSLocalizedString(@"Back", @"Back command")]) {
+    if ([title isEqual:kBLCWebBrowserBackString]) {
         [self.webview goBack];
-    } else if ([title isEqual:NSLocalizedString(@"Forward", @"Forward command")]) {
+    } else if ([title isEqual:kBLCWebBrowserForwardString]) {
         [self.webview goForward];
-    } else if ([title isEqual:NSLocalizedString(@"Stop", @"Stop command")]) {
+    } else if ([title isEqual:kBLCWebBrowserStopString]) {
         [self.webview stopLoading];
-    } else if ([title isEqual:NSLocalizedString(@"Refresh", @"Reload command")]) {
+    } else if ([title isEqual:kBLCWebBrowserRefreshString]) {
         [self.webview reload];
     }
 }

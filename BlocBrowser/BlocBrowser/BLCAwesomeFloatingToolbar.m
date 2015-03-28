@@ -98,22 +98,26 @@
 
 #pragma mark - Touch Handling
 
-- (UILabel *) labelFromTouches:(NSSet *)touches withEvent:(UIEvent *)event {
+- (UIView *) viewFromTouches:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CGPoint location = [touch locationInView:self];
     UIView *subview = [self hitTest:location withEvent:event];
-    return (UILabel *)subview;
+    
+    return subview;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    UILabel *label = [self labelFromTouches:touches withEvent:event];
+    UIView *view = [self viewFromTouches:touches withEvent:event];
     
-    self.currentLabel = label;
-    self.currentLabel.alpha = 0.5;
+    if (view != self) {
+        self.currentLabel = (UILabel *)view;
+        self.currentLabel.alpha = 0.5;
+    }
+    
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    UILabel *label = [self labelFromTouches:touches withEvent:event];
+    UIView *label = [self viewFromTouches:touches withEvent:event];
     
     if (self.currentLabel != label) {
         // The label being touched is no longer the initial label
@@ -125,7 +129,7 @@
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    UILabel *label = [self labelFromTouches:touches withEvent:event];
+    UIView *label = [self viewFromTouches:touches withEvent:event];
     
     if (self.currentLabel == label) {
         NSLog(@"Label tapped: %@", self.currentLabel.text);
