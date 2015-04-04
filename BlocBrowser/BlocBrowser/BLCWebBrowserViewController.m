@@ -99,6 +99,44 @@
     }
 }
 
+- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTryToPanWithOffset:(CGPoint)offset {
+    CGPoint startingPoint = toolbar.frame.origin;
+    CGPoint newPoint = CGPointMake(startingPoint.x + offset.x, startingPoint.y + offset.y);
+    
+    CGRect potentialNewFrame = CGRectMake(newPoint.x, newPoint.y, CGRectGetWidth(toolbar.frame), CGRectGetHeight(toolbar.frame));
+    
+    if (CGRectContainsRect(self.view.bounds, potentialNewFrame)) {
+        toolbar.frame = potentialNewFrame;
+    }
+}
+
+- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTryToPinchWithScale:(CGFloat)scale {
+        
+    CGAffineTransform toolbarTransform = self.awesomeToolbar.transform;
+    
+    self.awesomeToolbar.transform = toolbarTransform;
+    
+}
+
+
+/* KILL WHEN DONE
+ @package
+ CGFloat           _initialTouchDistance;
+ CGFloat           _initialTouchScale;
+ NSTimeInterval    _lastTouchTime;
+ CGFloat           _velocity;
+ CGFloat           _previousVelocity;
+ CGFloat           _scaleThreshold;
+ CGAffineTransform _transform;
+ CGPoint           _anchorSceneReferencePoint;
+ UITouch          *_touches[2];
+ CGFloat           _hysteresis;
+ id                _transformAnalyzer;
+ unsigned int      _endsOnSingleTouch:1;
+ */
+
+
+
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
