@@ -18,6 +18,7 @@
 - (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTryToPanWithOffset:(CGPoint)offset;
 - (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTryToPinchWithScale:(CGFloat)scale;
 
+
 @end
 
 @interface BLCAwesomeFloatingToolbar : UIView

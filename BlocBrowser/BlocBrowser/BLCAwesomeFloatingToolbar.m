@@ -11,12 +11,13 @@
 @interface BLCAwesomeFloatingToolbar ()
 
 @property (nonatomic, strong) NSArray *currentTitles;
-@property (nonatomic, strong) NSArray *colors;
+@property (nonatomic, strong) NSMutableArray *colors;
 @property (nonatomic, strong) NSArray *labels;
 @property (nonatomic, weak) UILabel *currentLabel;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 
 @end
 
@@ -31,10 +32,10 @@
         
         // Save the titles, and set the 4 colors
         self.currentTitles = titles;
-        self.colors = @[[UIColor colorWithRed:199/255.0 green:158/255.0 blue:203/255.0 alpha:1],
+        self.colors = [@[[UIColor colorWithRed:199/255.0 green:158/255.0 blue:203/255.0 alpha:1],
                         [UIColor colorWithRed:255/255.0 green:105/255.0 blue:97/255.0 alpha:1],
                         [UIColor colorWithRed:222/255.0 green:165/255.0 blue:164/255.0 alpha:1],
-                        [UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1]];
+                        [UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1]] mutableCopy];
         
         NSMutableArray *labelsArray = [[NSMutableArray alloc] init];
         
@@ -65,12 +66,15 @@
         
         self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
         [self addGestureRecognizer:self.tapGesture];
+       
         self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panFired:)];
-        [self addGestureRecognizer:self.panGesture];
-        
+       [self addGestureRecognizer:self.panGesture];
         
         self.pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchChanged:)];
         [self addGestureRecognizer:self.pinchGesture];
+        
+        self.longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressFired:)];
+        [self addGestureRecognizer:self.longPressGesture];
     }
     
     return self;
@@ -78,6 +82,7 @@
 
 - (void) layoutSubviews {
     // set the frames for the 4 labels
+    
     
     for (UILabel *thisLabel in self.labels) {
         NSUInteger currentLabelIndex = [self.labels indexOfObject:thisLabel];
@@ -135,7 +140,7 @@
     if (recognizer.state == UIGestureRecognizerStateChanged) {
         CGPoint translation = [recognizer translationInView:self];
         
-        NSLog(@"New translation: %@", NSStringFromCGPoint(translation));
+        // NSLog(@"New translation: %@", NSStringFromCGPoint(translation));
         
         if ([self.delegate respondsToSelector:@selector(floatingToolbar:didTryToPanWithOffset:)]) {
             [self.delegate floatingToolbar:self didTryToPanWithOffset:translation];
@@ -146,15 +151,42 @@
 }
 
 - (void) pinchChanged:(UIPinchGestureRecognizer *)recognizer {
-    
-
-    CGFloat scale = self.pinchGesture.scale;
-    
+    if (recognizer.state == UIGestureRecognizerStateChanged) {
+        
         if ([self.delegate respondsToSelector:@selector(floatingToolbar:didTryToPinchWithScale:)]) {
-            [self.delegate floatingToolbar:self didTryToPinchWithScale:scale ];
+            [self.delegate floatingToolbar:self didTryToPinchWithScale:[recognizer scale]];
         }
+        
+        recognizer.scale = 1;
+    }
+}
+
+- (void) longPressFired:(UILongPressGestureRecognizer *)recognizer {
+    if (recognizer.state == UIGestureRecognizerStateRecognized) {
+        
+        // Reorder colors in the 'colors' array - once for each longpress
+        
+            // Save first color to a variable
+            UIColor *pluckedColor = self.colors[0];
+        
+            // Remove first color
+            [self.colors removeObjectAtIndex:0];
+        
+            // Add removed (formerly first) color to the end
+            [self.colors addObject:pluckedColor];
+        
+            // Sanity check
+            // NSLog(@"first color is now: %@", self.colors[0]);
+        
+        for (UILabel *thisLabel in self.labels) {
+            NSUInteger currentLabelIndex = [self.labels indexOfObject:thisLabel];
+            UIColor *colorForThisLabel = [self.colors objectAtIndex:currentLabelIndex];
+            thisLabel.backgroundColor = colorForThisLabel ;
+            }
+        
     }
     
+}
 
 
 

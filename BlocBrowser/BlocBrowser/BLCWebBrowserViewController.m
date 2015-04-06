@@ -70,17 +70,16 @@
     // First calculate some dimensions
     static const CGFloat itemHeight = 50;
     CGFloat width = CGRectGetWidth(self.view.bounds);
-    
     CGFloat browserHeight = CGRectGetHeight(self.view.bounds) - itemHeight;
-    CGFloat leftPadding = (width - 280) / 2;
-    CGFloat topPadding = (browserHeight - 60) / 3;
     
     
     // Now assign the frames
     self.textField.frame = CGRectMake(0, 0, width, itemHeight);
     self.webview.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
     
-    self.awesomeToolbar.frame = CGRectMake(leftPadding, topPadding, 280, 60); // Is there a better way to get 280 and 60?
+    if (self.awesomeToolbar.frame.size.height < 10 && self.awesomeToolbar.frame.size.width < 20) {
+        self.awesomeToolbar.frame = CGRectMake(20, 70, 280, 60);
+    }
         
     
 }
@@ -110,30 +109,16 @@
     }
 }
 
-- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTryToPinchWithScale:(CGFloat)scale {
-        
-    CGAffineTransform toolbarTransform = self.awesomeToolbar.transform;
+- (void)floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTryToPinchWithScale:(CGFloat)scale {
+
+    // NSLog(@"Now scale it");
     
-    self.awesomeToolbar.transform = toolbarTransform;
+    toolbar.transform = CGAffineTransformScale(toolbar.transform, scale, scale);
+    scale = 1;
     
 }
 
 
-/* KILL WHEN DONE
- @package
- CGFloat           _initialTouchDistance;
- CGFloat           _initialTouchScale;
- NSTimeInterval    _lastTouchTime;
- CGFloat           _velocity;
- CGFloat           _previousVelocity;
- CGFloat           _scaleThreshold;
- CGAffineTransform _transform;
- CGPoint           _anchorSceneReferencePoint;
- UITouch          *_touches[2];
- CGFloat           _hysteresis;
- id                _transformAnalyzer;
- unsigned int      _endsOnSingleTouch:1;
- */
 
 
 
