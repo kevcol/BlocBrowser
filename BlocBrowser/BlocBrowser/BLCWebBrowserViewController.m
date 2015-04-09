@@ -86,17 +86,25 @@
 
 #pragma mark - BLCAwesomeFloatingToolbarDelegate
 
-- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didSelectButtonWithTitle:(NSString *)title {
-    if ([title isEqual:kBLCWebBrowserBackString]) {
+
+- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTapButton:(UIButton *)currentButton {
+ 
+    if (currentButton.tag == 0) {
+        NSLog(@"Go Back!");
         [self.webview goBack];
-    } else if ([title isEqual:kBLCWebBrowserForwardString]) {
+    } else if (currentButton.tag == 1) {
+        NSLog(@"Go Forward!");
         [self.webview goForward];
-    } else if ([title isEqual:kBLCWebBrowserStopString]) {
+    } else if (currentButton.tag == 2) {
+        NSLog(@"Stop!");
         [self.webview stopLoading];
-    } else if ([title isEqual:kBLCWebBrowserRefreshString]) {
+    } else if (currentButton.tag == 3) {
+        NSLog(@"Reload!");
         [self.webview reload];
     }
 }
+
+
 
 - (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTryToPanWithOffset:(CGPoint)offset {
     CGPoint startingPoint = toolbar.frame.origin;
@@ -222,7 +230,7 @@
     
    
     // NOTE: Update textField with current URL
-    //self.textField.text = self.webview.request.URL.absoluteString;
+    self.textField.text = self.webview.request.URL.absoluteString;
     
     [self.awesomeToolbar setEnabled:[self.webview canGoBack] forButtonWithTitle:kBLCWebBrowserBackString];
     [self.awesomeToolbar setEnabled:[self.webview canGoForward] forButtonWithTitle:kBLCWebBrowserForwardString];

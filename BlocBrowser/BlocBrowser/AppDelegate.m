@@ -27,11 +27,11 @@
     [self.window makeKeyAndVisible];
     
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Welcome!", @"Welcome title")
+   /* UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Welcome!", @"Welcome title")
                                                     message:NSLocalizedString(@"Get excited to use the best web browser ever!", @"Welcome comment")
                                                    delegate:nil
                                           cancelButtonTitle:NSLocalizedString(@"OK, I'm excited!", @"Welcome button title") otherButtonTitles:nil];
-    [alert show];
+    [alert show]; */
     
     return YES;
 }
